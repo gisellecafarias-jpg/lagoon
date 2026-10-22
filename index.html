@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lagoon</title>
+<!-- Faz o navegador reconhecer como aplicativo -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f2eee6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191a15" media="(prefers-color-scheme: dark)">
+<!-- iPhone: ícone e tela cheia -->
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lagoon">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icon-192.png">
+<style>
+  html, body { margin: 0; height: 100%; background: #f2eee6; }
+  @media (prefers-color-scheme: dark) { html, body { background: #191a15; } }
+  /* o cardápio ocupa a tela toda, respeitando o notch do iPhone */
+  iframe {
+    position: fixed; border: 0;
+    top: env(safe-area-inset-top, 0px); left: 0;
+    width: 100%; height: calc(100% - env(safe-area-inset-top, 0px));
+  }
+  #off {
+    display: none; position: fixed; inset: 0; place-items: center; text-align: center;
+    font: 17px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #75786a; padding: 24px;
+  }
+  body.offline #off { display: grid; }
+  body.offline iframe { display: none; }
+</style>
+</head>
+<body>
+<!-- Endereço do cardápio no Apps Script (não muda quando você implanta versões novas) -->
+<iframe src="https://script.google.com/macros/s/AKfycbzYrKtIbScsAWc9ddHOf_YaeFYhgSRYN-RhC-oMqFglGovohWEJyq8PmJhr4Somb3_OqQ/exec"
+        title="Cardápio Lagoon"></iframe>
+<div id="off"><div><b>Sem internet</b><br>O cardápio precisa de conexão para carregar.</div></div>
+<script>
+  // avisa quando o celular está sem internet
+  function net(){ document.body.classList.toggle('offline', !navigator.onLine); }
+  addEventListener('online', net); addEventListener('offline', net); net();
+  // registra o service worker (exigido para o Android oferecer "Instalar app")
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
